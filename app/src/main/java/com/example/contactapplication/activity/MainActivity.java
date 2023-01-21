@@ -2,6 +2,7 @@ package com.example.contactapplication.activity;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.telephony.SmsManager;
@@ -27,6 +28,7 @@ import com.example.contactapplication.model.ContactModel;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -121,6 +123,12 @@ public class MainActivity extends AppCompatActivity implements ContactDetailsFra
 
         contactTab.setOnClickListener(listener);
         messageTab.setOnClickListener(listener);
+
+        FloatingActionButton dialPadBtn = findViewById(R.id.dialpad_view);
+        dialPadBtn.setOnClickListener(v -> {
+            Intent dialIntent = new Intent(Intent.ACTION_DIAL);
+            startActivity(dialIntent);
+        });
     }
 
     private List<Fragment> getFragments() {
