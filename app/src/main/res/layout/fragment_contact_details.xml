@@ -63,7 +63,7 @@
                 android:layout_height="wrap_content">
 
                 <ImageView
-                    android:id="@+id/call"
+                    android:id="@+id/call_view"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_margin="8dp"
@@ -79,7 +79,7 @@
                     android:layout_marginStart="3dp"
                     android:layout_marginTop="8dp"
                     android:layout_toStartOf="@id/send_message"
-                    android:layout_toEndOf="@id/call"
+                    android:layout_toEndOf="@id/call_view"
                     android:fontFamily="@font/montserrat_regular"
                     android:textColor="@color/black"
                     android:textSize="18sp"

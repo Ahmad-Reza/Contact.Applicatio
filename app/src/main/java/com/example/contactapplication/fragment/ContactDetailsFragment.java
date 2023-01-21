@@ -75,6 +75,16 @@ public class ContactDetailsFragment extends BottomSheetDialogFragment {
         ImageView sendMessage = rootView.findViewById(R.id.send_message);
         sendMessage.setOnClickListener(view -> {
             listener.onMessageSend(contactModel);
+
+            dismiss();
+        });
+
+        ImageView callBtn = rootView.findViewById(R.id.call_view);
+        callBtn.setOnClickListener(view -> {
+            Intent callIntent = new Intent(Intent.ACTION_CALL);
+            callIntent.setData(Uri.parse("tel:" + contactModel.getNumber()));
+            startActivity(callIntent);
+
             dismiss();
         });
 
