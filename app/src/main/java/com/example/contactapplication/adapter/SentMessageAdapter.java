@@ -39,7 +39,7 @@ public class SentMessageAdapter extends RecyclerView.Adapter<SentMessageAdapter.
         SendMessageModel sendMessageModel = sendMessageModels.get(position);
 
         holder.contactName.setText("Contact Name - " + sendMessageModel.getContactName());
-        holder.sentOtp.setText("Sent OTP - " + sendMessageModel.getSentOTP());
+        holder.sentOtp.setText("Sent Message - " + sendMessageModel.getMessage());
         holder.sendMessageTime.setText(formatDateTime(sendMessageModel.getLocalDateTime()));
     }
 

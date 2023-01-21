@@ -3,12 +3,12 @@ package com.example.contactapplication.model;
 import java.time.LocalDateTime;
 
 public class SendMessageModel {
-    private String sentOTP;
+    private String message;
     private String contactName;
     private LocalDateTime localDateTime;
 
-    public SendMessageModel(String contactName, String sentOTP, LocalDateTime localDateTime) {
-        this.sentOTP = sentOTP;
+    public SendMessageModel(String contactName, String message, LocalDateTime localDateTime) {
+        this.message = message;
         this.contactName = contactName;
         this.localDateTime = localDateTime;
     }
@@ -21,12 +21,12 @@ public class SendMessageModel {
         this.contactName = contactName;
     }
 
-    public String getSentOTP() {
-        return sentOTP;
+    public String getMessage() {
+        return message;
     }
 
-    public void setSentOTP(String sentOTP) {
-        this.sentOTP = sentOTP;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public LocalDateTime getLocalDateTime() {

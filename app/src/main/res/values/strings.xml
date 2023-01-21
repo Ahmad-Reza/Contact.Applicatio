@@ -3,7 +3,7 @@
     <string name="contact_app_label">Contact App</string>
     <string name="contact_app_description">Welcome back, you can send message on below given contact</string>
     <string name="contacts_label">Contacts</string>
-    <string name="messages_label">Messages</string>
+    <string name="message_label">Message</string>
     <string name="contact_details_label">Contact Details</string>
     <string name="send_message_label">Sent Message</string>
     <string name="close_label">Close</string>

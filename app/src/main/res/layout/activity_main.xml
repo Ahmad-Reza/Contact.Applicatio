@@ -109,7 +109,7 @@
                     android:layout_weight="1"
                     android:fontFamily="@font/montserrat_regular"
                     android:gravity="center"
-                    android:text="@string/messages_label"
+                    android:text="@string/message_label"
                     android:textSize="18sp" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>

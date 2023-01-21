@@ -19,7 +19,7 @@ public class SendMessageDB extends SQLiteOpenHelper {
 
     private static final String ID = "id";
     private static final String CONTACT_NAME = "name";
-    private static final String MESSAGE_OTP = "sent_otp";
+    private static final String SENT_MESSAGE = "message";
     private static final String MESSAGE_SENT_TIME = "sent_time";
 
     public SendMessageDB(Context context) {
@@ -31,16 +31,16 @@ public class SendMessageDB extends SQLiteOpenHelper {
         String query = "CREATE TABLE " + SEND_MESSAGE_TABLE + " ("
                 + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + CONTACT_NAME + " TEXT, "
-                + MESSAGE_OTP + " TEXT, "
+                + SENT_MESSAGE + " TEXT, "
                 + MESSAGE_SENT_TIME + " TEXT)";
 
         database.execSQL(query);
     }
 
-    public void updateSentMessage(String name, String otp, String dateTime) {
+    public void updateSentMessage(String name, String message, String dateTime) {
         ContentValues values = new ContentValues();
         values.put(CONTACT_NAME, name);
-        values.put(MESSAGE_OTP, otp);
+        values.put(SENT_MESSAGE, message);
         values.put(MESSAGE_SENT_TIME, dateTime);
 
         SQLiteDatabase database = this.getWritableDatabase();

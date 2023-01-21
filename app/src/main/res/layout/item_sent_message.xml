@@ -54,7 +54,7 @@
             android:layout_marginVertical="8dp"
             android:fontFamily="@font/montserrat_regular"
             android:textSize="16sp"
-            tools:text="Sent OTP - " />
+            tools:text="Sent Message - " />
 
         <TextView
             android:id="@+id/date_time_view"
