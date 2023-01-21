@@ -1,5 +1,6 @@
 package com.example.contactapplication.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.contactapplication.R;
+import com.example.contactapplication.activity.ContactDetailsActivity;
 import com.example.contactapplication.adapter.ContactAdapter;
 import com.example.contactapplication.model.ContactModel;
 
@@ -34,9 +36,11 @@ public class ContactFragment extends Fragment {
         RecyclerView contactRecycler = rootView.findViewById(R.id.contact_recycler);
         contactRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         ContactAdapter contactAdapter = new ContactAdapter(getContactList(), ((position, item) -> {
-            ContactDetailsFragment contactDetailsFragment = ContactDetailsFragment.newInstance(item);
-            contactDetailsFragment.show(getChildFragmentManager(), "ContactDetailsFragment");
+            Intent intent = new Intent(getContext(), ContactDetailsActivity.class);
+            intent.putExtra(ContactDetailsActivity.CONTACT_MODEL, item);
+            startActivity(intent);
         }));
+
         contactRecycler.setAdapter(contactAdapter);
 
         return rootView;

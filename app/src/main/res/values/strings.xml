@@ -7,4 +7,8 @@
     <string name="contact_details_label">Contact Details</string>
     <string name="send_message_label">Sent Message</string>
     <string name="close_label">Close</string>
+    <string name="call_label">Call</string>
+    <string name="video_label">Video</string>
+    <string name="send_label">send</string>
+    <string name="cancel_label">cancel</string>
 </resources>
