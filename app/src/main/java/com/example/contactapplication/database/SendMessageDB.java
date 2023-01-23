@@ -13,14 +13,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SendMessageDB extends SQLiteOpenHelper {
-    private static final int DB_VERSION = 1;
-    private static final String DB_NAME = "message";
+    private static final int DB_VERSION = 2;
+    private static final String DB_NAME = "details";
     private static final String SEND_MESSAGE_TABLE = "send_message";
 
     private static final String ID = "id";
     private static final String CONTACT_NAME = "name";
     private static final String SENT_MESSAGE = "message";
-    private static final String MESSAGE_SENT_TIME = "sent_time";
+    private static final String MESSAGE_SENT_TIME = "datetime";
 
     public SendMessageDB(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
