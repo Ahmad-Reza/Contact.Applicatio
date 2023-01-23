@@ -28,7 +28,9 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.time.LocalDateTime;
 
 public class ContactDetailsActivity extends AppCompatActivity {
-    private static final int SEND_SMS_PERMISSIONS_REQUEST = 0;
+    private static final int CALL_PERMISSIONS_REQUEST = 0;
+    private static final int SEND_SMS_PERMISSIONS_REQUEST = 1;
+
     public static final String CONTACT_MODEL = "CONTACT_MODEL";
 
     @Override
@@ -49,9 +51,14 @@ public class ContactDetailsActivity extends AppCompatActivity {
 
         LinearLayout audioCallView = findViewById(R.id.audio_call_view);
         audioCallView.setOnClickListener(view -> {
-            Intent callIntent = new Intent(Intent.ACTION_CALL);
-            callIntent.setData(Uri.parse("tel:" + contactModel.getNumber()));
-            startActivity(callIntent);
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                callIntent.setData(Uri.parse("tel:" + contactModel.getNumber()));
+                startActivity(callIntent);
+
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, CALL_PERMISSIONS_REQUEST);
+            }
         });
 
         LinearLayout sendMessageView = findViewById(R.id.send_message_view);
@@ -66,16 +73,11 @@ public class ContactDetailsActivity extends AppCompatActivity {
                     .setCancelable(false)
                     .setView(dialogView);
 
-
             AlertDialog alert = builder.create();
 
             Button sendBtn = dialogView.findViewById(R.id.send_button);
             sendBtn.setOnClickListener(view1 -> {
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(this,
-                            new String[]{Manifest.permission.SEND_SMS}, SEND_SMS_PERMISSIONS_REQUEST);
-
-                } else {
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
                     String message = messageInput != null ? String.valueOf(messageInput.getText()) : null;
                     if (message != null && !message.isEmpty()) {
                         SmsManager smsManager = SmsManager.getDefault();
@@ -87,6 +89,10 @@ public class ContactDetailsActivity extends AppCompatActivity {
                         alert.dismiss();
 
                     } else messageLayout.setError("field should not be empty");
+                } else {
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{Manifest.permission.SEND_SMS}, SEND_SMS_PERMISSIONS_REQUEST);
+
                 }
             });
 
@@ -103,12 +109,22 @@ public class ContactDetailsActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        String permissionMessage = null;
+
         if (requestCode == SEND_SMS_PERMISSIONS_REQUEST) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(getApplicationContext(), "SMS Permission Granted", Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(getApplicationContext(), "SMS Permission dennied.", Toast.LENGTH_LONG).show();
-            }
+                permissionMessage = "SMS Permission Granted";
+
+            } else permissionMessage = "SMS Permission dennied.";
+
+        } else if (requestCode == CALL_PERMISSIONS_REQUEST) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                permissionMessage = "Call Permission Granted";
+
+            } else permissionMessage = "Call Permission dennied.";
         }
+
+        Toast.makeText(getApplicationContext(), permissionMessage, Toast.LENGTH_LONG).show();
     }
 }

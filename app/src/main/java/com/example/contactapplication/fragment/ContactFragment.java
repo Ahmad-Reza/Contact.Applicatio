@@ -1,12 +1,22 @@
 package com.example.contactapplication.fragment;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ContactFragment extends Fragment {
+    private static final int READ_NUMBER_REQUEST = 1001;
+
     private ProgressBar contactLoading;
 
     @Override
@@ -32,6 +44,10 @@ public class ContactFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_contact, container, false);
 
         contactLoading = rootView.findViewById(R.id.contact_loading);
+
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.READ_CONTACTS}, READ_NUMBER_REQUEST);
+        }
 
         RecyclerView contactRecycler = rootView.findViewById(R.id.contact_recycler);
         contactRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -46,25 +62,50 @@ public class ContactFragment extends Fragment {
         return rootView;
     }
 
+    @SuppressLint("Range")
     private List<ContactModel> getContactList() {
         List<ContactModel> contactList = new ArrayList<>();
 
         contactLoading.setVisibility(View.VISIBLE);
 
-        contactList.add(new ContactModel(0, "Ahmad Reza", "7903027781")); // Valid number
-        contactList.add(new ContactModel(0, "Kisan Network", "9810153260")); // Valid number
-        contactList.add(new ContactModel(2, "Akshay Reza", "7594735278"));
-        contactList.add(new ContactModel(1, "Kundan kumar", "7594635278"));
-        contactList.add(new ContactModel(3, "Nishant Goswami", "7594735278"));
-        contactList.add(new ContactModel(4, "Praphul kumar", "7594735278"));
-        contactList.add(new ContactModel(5, "Ahmad Reza", "7594735278"));
-        contactList.add(new ContactModel(6, "Nishant Goswami", "7594735278"));
-        contactList.add(new ContactModel(8, "Akshay Reza", "7594735278"));
-        contactList.add(new ContactModel(9, "Kundan kumar", "7594635278"));
-        contactList.add(new ContactModel(10, "Praphul kumar", "7594735278"));
+        ContentResolver contentResolver = requireContext().getContentResolver();
+        Cursor cursor = contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
 
+        if (cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+
+                if (cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER) >= 0
+                        || cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER) == -1) {
+                    Cursor cursorInfo = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?", new String[]{id}, null);
+
+                    while (cursorInfo.moveToNext()) {
+                        String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                        String number = cursorInfo.getString(cursorInfo.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                        contactList.add(new ContactModel(Integer.parseInt(id), name, number));
+                    }
+                    cursorInfo.close();
+                }
+            }
+        }
+
+        cursor.close();
         contactLoading.setVisibility(View.GONE);
 
         return contactList;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == READ_NUMBER_REQUEST) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(requireContext(), "Read contact Permission Granted", Toast.LENGTH_LONG).show();
+
+            } else {
+                Toast.makeText(requireContext(), "Read contact dennied.", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }
